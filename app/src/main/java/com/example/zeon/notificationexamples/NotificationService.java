@@ -52,6 +52,7 @@ public class NotificationService extends Service {
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setContentTitle("My notification")
+                        .setAutoCancel(true)
                         .setContentText("Hello World!");
 
         Intent resultIntent = new Intent(this, MainActivity.class);
