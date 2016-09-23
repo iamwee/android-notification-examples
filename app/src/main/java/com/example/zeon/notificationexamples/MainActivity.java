@@ -17,8 +17,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         btnShow = (Button) findViewById(R.id.btn_show);
-
-
         btnShow.setOnClickListener(clickListener);
     }
 
@@ -27,7 +25,8 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View v) {
             if(v == btnShow){
                 startService(new Intent(MainActivity.this, NotificationService.class));
-                Toast.makeText(MainActivity.this, "Notification will show in 5 second", Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "Notification will show in 5 second",
+                        Toast.LENGTH_LONG).show();
                 finish();
             }
         }

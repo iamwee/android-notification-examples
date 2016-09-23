@@ -1,15 +1,22 @@
 package com.example.zeon.notificationexamples;
 
+import android.annotation.TargetApi;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
-import android.widget.Toast;
+import android.support.v4.content.ContextCompat;
+import android.view.View;
+import android.widget.RemoteViews;
 
 /**
  * Created by Zeon on 1/9/2559.
@@ -30,7 +37,7 @@ public class NotificationService extends Service {
         handler = new Handler(getMainLooper()){
             @Override
             public void handleMessage(Message msg) {
-                pushNotification();
+                showNotification();
             }
         };
     }
@@ -46,30 +53,40 @@ public class NotificationService extends Service {
         super.onDestroy();
         handler.removeMessages(1);
     }
+    private void showNotification() {
 
-    private void pushNotification() {
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle("My notification")
-                        .setAutoCancel(true)
-                        .setContentText("Hello World!");
 
         Intent resultIntent = new Intent(this, MainActivity.class);
-
         PendingIntent resultPendingIntent =
                 PendingIntent.getActivity(
                         this,
                         0,
                         resultIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT
+                        PendingIntent.FLAG_CANCEL_CURRENT
                 );
 
-        mBuilder.setContentIntent(resultPendingIntent);
-        int mNotificationId = 001;
+
+        int color = ContextCompat.getColor(this, R.color.colorPrimary);
+        Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(),
+                R.mipmap.ic_launcher);
+
+        Notification notification =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.mipmap.ic_launcher)
+                        .setLargeIcon(bitmap)
+                        .setContentTitle("Benznest test notification")
+                        .setContentText("Good night.")
+                        .setAutoCancel(true)
+                        .setColor(color)
+                        .setPriority(NotificationCompat.PRIORITY_MAX)
+                        .setContentIntent(resultPendingIntent)
+                        .setVibrate(new long[] { 500, 1000, 500 })
+                        .setLights(color, 3000, 3000)
+                        .build();
+
+
         NotificationManager mNotifyMgr =
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        mNotifyMgr.notify(mNotificationId, mBuilder.build());
-        Toast.makeText(getApplicationContext(), "OK", Toast.LENGTH_LONG).show();
+        mNotifyMgr.notify(0, notification);
     }
 }
